@@ -11,13 +11,26 @@
 #define new DEBUG_NEW
 #endif
 
+#define WM_INVOKE WM_USER + 1234
+
 
 // CDeltaBarrierDlg dialog
 
-
+UINT SimulationThreadProc(LPVOID pParam)
+{
+    CDeltaBarrierDlg & dlg = * (CDeltaBarrierDlg *) pParam;
+    while (dlg.m_bWorking)
+    {
+        // todo
+        Sleep(16);
+    }
+    return 0;
+}
 
 CDeltaBarrierDlg::CDeltaBarrierDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CDeltaBarrierDlg::IDD, pParent)
+    , m_pWorkerThread(NULL)
+    , m_bWorking(FALSE)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -30,6 +43,7 @@ void CDeltaBarrierDlg::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CDeltaBarrierDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+    ON_MESSAGE(WM_INVOKE, &CDeltaBarrierDlg::OnInvoke)
 END_MESSAGE_MAP()
 
 
@@ -85,3 +99,57 @@ HCURSOR CDeltaBarrierDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+
+void CDeltaBarrierDlg::StartSimulationThread()
+{
+    if (this->m_bWorking)
+    {
+        return;
+    }
+    this->m_bWorking = TRUE;
+    this->m_pWorkerThread = AfxBeginThread(&SimulationThreadProc, this, 0, 0, CREATE_SUSPENDED);
+    this->m_pWorkerThread->m_bAutoDelete = FALSE;
+    ResumeThread(this->m_pWorkerThread->m_hThread);
+}
+
+
+void CDeltaBarrierDlg::StopSimulationThread()
+{
+    if (this->m_bWorking)
+    {
+        this->m_bWorking = FALSE;
+        while (MsgWaitForMultipleObjects(
+            1, &this->m_pWorkerThread->m_hThread, FALSE, INFINITE, QS_SENDMESSAGE) != WAIT_OBJECT_0)
+        {
+            MSG msg;
+            while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+            {
+                TranslateMessage(&msg);
+                DispatchMessage(&msg);
+            }
+        }
+        //this->m_pWorkerThread->Delete();
+        delete this->m_pWorkerThread;
+        this->m_pWorkerThread = NULL;
+    }
+}
+
+
+void CDeltaBarrierDlg::Invoke(const std::function < void () > & fn)
+{
+    SendMessage(WM_INVOKE, 0, (LPARAM)&fn);
+}
+
+
+afx_msg LRESULT CDeltaBarrierDlg::OnInvoke(WPARAM wParam, LPARAM lParam)
+{
+    (*(const std::function < void () > *) lParam)();
+    return 0;
+}
+
+BOOL CDeltaBarrierDlg::DestroyWindow()
+{
+    StopSimulationThread();
+
+    return CDialogEx::DestroyWindow();
+}
