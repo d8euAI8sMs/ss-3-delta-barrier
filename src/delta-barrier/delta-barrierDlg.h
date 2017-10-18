@@ -43,4 +43,6 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
     virtual BOOL DestroyWindow();
+    afx_msg void OnBnClickedButton1();
+    afx_msg void OnBnClickedButton2();
 };
