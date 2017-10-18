@@ -31,6 +31,14 @@ CDeltaBarrierDlg::CDeltaBarrierDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CDeltaBarrierDlg::IDD, pParent)
     , m_pWorkerThread(NULL)
     , m_bWorking(FALSE)
+    , m_dL(0)
+    , m_dV0(0)
+    , m_nN(0)
+    , m_dS0(0)
+    , m_dE1(0)
+    , m_dE2(0)
+    , m_dX(0)
+    , m_dE(0)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -41,6 +49,14 @@ void CDeltaBarrierDlg::DoDataExchange(CDataExchange* pDX)
     DDX_Control(pDX, IDC_PLOT1, m_cBarrier);
     DDX_Control(pDX, IDC_PLOT2, m_cWaveFunc);
     DDX_Control(pDX, IDC_PLOT3, m_cTransmission);
+    DDX_Text(pDX, IDC_EDIT1, m_dL);
+    DDX_Text(pDX, IDC_EDIT2, m_dV0);
+    DDX_Text(pDX, IDC_EDIT3, m_nN);
+    DDX_Text(pDX, IDC_EDIT4, m_dS0);
+    DDX_Text(pDX, IDC_EDIT5, m_dE1);
+    DDX_Text(pDX, IDC_EDIT6, m_dE2);
+    DDX_Text(pDX, IDC_EDIT7, m_dX);
+    DDX_Text(pDX, IDC_EDIT8, m_dE);
 }
 
 BEGIN_MESSAGE_MAP(CDeltaBarrierDlg, CDialogEx)
@@ -49,6 +65,7 @@ BEGIN_MESSAGE_MAP(CDeltaBarrierDlg, CDialogEx)
     ON_MESSAGE(WM_INVOKE, &CDeltaBarrierDlg::OnInvoke)
     ON_BN_CLICKED(IDC_BUTTON1, &CDeltaBarrierDlg::OnBnClickedButton1)
     ON_BN_CLICKED(IDC_BUTTON2, &CDeltaBarrierDlg::OnBnClickedButton2)
+    ON_BN_CLICKED(IDC_BUTTON3, &CDeltaBarrierDlg::OnBnClickedButton3)
 END_MESSAGE_MAP()
 
 
@@ -171,4 +188,10 @@ void CDeltaBarrierDlg::OnBnClickedButton1()
 void CDeltaBarrierDlg::OnBnClickedButton2()
 {
     StopSimulationThread();
+}
+
+
+void CDeltaBarrierDlg::OnBnClickedButton3()
+{
+    // TODO: Add your control notification handler code here
 }

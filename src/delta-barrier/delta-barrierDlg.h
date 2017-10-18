@@ -50,4 +50,13 @@ public:
     PlotStatic m_cBarrier;
     PlotStatic m_cWaveFunc;
     PlotStatic m_cTransmission;
+    double m_dL;
+    double m_dV0;
+    int m_nN;
+    double m_dS0;
+    int m_dE1;
+    double m_dE2;
+    double m_dX;
+    double m_dE;
+    afx_msg void OnBnClickedButton3();
 };
