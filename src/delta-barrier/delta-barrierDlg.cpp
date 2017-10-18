@@ -7,12 +7,25 @@
 #include "delta-barrierDlg.h"
 #include "afxdialogex.h"
 
+#include <vector>
+
+#include <util/common/math/common.h>
+#include <util/common/math/dsolve.h>
+
+using namespace plot;
+using namespace util;
+using namespace math;
+
+using points_t = std::vector < point < double > > ;
+using plot_t = simple_list_plot < points_t > ;
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
 #define WM_INVOKE WM_USER + 1234
 
+plot_t barrier_plot, wavefunc_plot, transmission_plot;
 
 // CDeltaBarrierDlg dialog
 
@@ -80,7 +93,99 @@ BOOL CDeltaBarrierDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// Set big icon
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
-	// TODO: Add extra initialization here
+    auto_viewport_params params;
+    params.factors = { 0, 0, 0.1, 0.1 };
+    auto barrier_avp      = min_max_auto_viewport < points_t > ::create();
+    auto wavefunc_avp     = min_max_auto_viewport < points_t > ::create();
+    auto transmission_avp = min_max_auto_viewport < points_t > ::create();
+    barrier_avp->set_params(params);
+    wavefunc_avp->set_params(params);
+    transmission_avp->set_params(params);
+
+    barrier_plot
+        .with_view()
+        .with_view_line_pen(plot::palette::pen(RGB(255, 255, 255), 1))
+        .with_data()
+        .with_auto_viewport(barrier_avp);
+    wavefunc_plot
+        .with_view()
+        .with_view_line_pen(plot::palette::pen(RGB(255, 255, 255), 1))
+        .with_data()
+        .with_auto_viewport(wavefunc_avp);
+    transmission_plot
+        .with_view()
+        .with_view_line_pen(plot::palette::pen(RGB(255, 255, 255), 1))
+        .with_data()
+        .with_auto_viewport(transmission_avp);
+
+    m_cBarrier.background = palette::brush();
+    m_cWaveFunc.background = palette::brush();
+    m_cTransmission.background = palette::brush();
+
+    m_cTransmission.triple_buffered = true;
+
+    m_cBarrier.plot_layer.with(
+        viewporter::create(
+            tick_drawable::create(
+                barrier_plot.view,
+                const_n_tick_factory<axe::x>::create(
+                    make_simple_tick_formatter(1),
+                    0,
+                    10
+                ),
+                const_n_tick_factory<axe::y>::create(
+                    make_simple_tick_formatter(3),
+                    0,
+                    5
+                ),
+                palette::pen(RGB(80, 80, 80)),
+                RGB(200, 200, 200)
+            ),
+            make_viewport_mapper(barrier_plot.viewport_mapper)
+        )
+    );
+
+    m_cWaveFunc.plot_layer.with(
+        viewporter::create(
+            tick_drawable::create(
+                wavefunc_plot.view,
+                const_n_tick_factory<axe::x>::create(
+                    make_simple_tick_formatter(1),
+                    0,
+                    10
+                ),
+                const_n_tick_factory<axe::y>::create(
+                    make_simple_tick_formatter(3),
+                    0,
+                    5
+                ),
+                palette::pen(RGB(80, 80, 80)),
+                RGB(200, 200, 200)
+            ),
+            make_viewport_mapper(wavefunc_plot.viewport_mapper)
+        )
+    );
+
+    m_cTransmission.plot_layer.with(
+        viewporter::create(
+            tick_drawable::create(
+                transmission_plot.view,
+                const_n_tick_factory<axe::x>::create(
+                    make_simple_tick_formatter(1),
+                    0,
+                    10
+                ),
+                const_n_tick_factory<axe::y>::create(
+                    make_simple_tick_formatter(3),
+                    0,
+                    5
+                ),
+                palette::pen(RGB(80, 80, 80)),
+                RGB(200, 200, 200)
+            ),
+            make_viewport_mapper(transmission_plot.viewport_mapper)
+        )
+    );
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -193,5 +298,5 @@ void CDeltaBarrierDlg::OnBnClickedButton2()
 
 void CDeltaBarrierDlg::OnBnClickedButton3()
 {
-    // TODO: Add your control notification handler code here
+
 }
