@@ -1,0 +1,16 @@
+version: '{build}'
+
+image:
+  - Visual Studio 2013
+
+configuration:
+  - Release
+
+install:
+  - git submodule update --init --recursive
+
+build:
+  project: src\delta-barrier\delta-barrier.sln
+
+artifacts:
+  - path: 'src\delta-barrier\%CONFIGURATION%\delta-barrier.exe'
