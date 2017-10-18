@@ -37,7 +37,10 @@ CDeltaBarrierDlg::CDeltaBarrierDlg(CWnd* pParent /*=NULL*/)
 
 void CDeltaBarrierDlg::DoDataExchange(CDataExchange* pDX)
 {
-	CDialogEx::DoDataExchange(pDX);
+    CDialogEx::DoDataExchange(pDX);
+    DDX_Control(pDX, IDC_PLOT1, m_cBarrier);
+    DDX_Control(pDX, IDC_PLOT2, m_cWaveFunc);
+    DDX_Control(pDX, IDC_PLOT3, m_cTransmission);
 }
 
 BEGIN_MESSAGE_MAP(CDeltaBarrierDlg, CDialogEx)

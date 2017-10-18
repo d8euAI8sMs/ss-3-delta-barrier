@@ -5,6 +5,8 @@
 
 #include <functional>
 
+#include <util/common/plot/PlotStatic.h>
+
 // CDeltaBarrierDlg dialog
 class CDeltaBarrierDlg : public CDialogEx
 {
@@ -45,4 +47,7 @@ public:
     virtual BOOL DestroyWindow();
     afx_msg void OnBnClickedButton1();
     afx_msg void OnBnClickedButton2();
+    PlotStatic m_cBarrier;
+    PlotStatic m_cWaveFunc;
+    PlotStatic m_cTransmission;
 };
