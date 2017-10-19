@@ -1,4 +1,3 @@
-
 // delta-barrierDlg.cpp : implementation file
 //
 
@@ -12,12 +11,17 @@
 #include <util/common/math/common.h>
 #include <util/common/math/dsolve.h>
 
+#include "model.h"
+
 using namespace plot;
 using namespace util;
 using namespace math;
+using namespace model;
 
 using points_t = std::vector < point < double > > ;
 using plot_t = simple_list_plot < points_t > ;
+
+const size_t n_points = 1000;
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -44,10 +48,10 @@ CDeltaBarrierDlg::CDeltaBarrierDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CDeltaBarrierDlg::IDD, pParent)
     , m_pWorkerThread(NULL)
     , m_bWorking(FALSE)
-    , m_dL(0)
-    , m_dV0(0)
-    , m_nN(0)
-    , m_dS0(0)
+    , m_dL(1)
+    , m_dV0(1)
+    , m_nN(1)
+    , m_dS0(0.01)
     , m_dE1(0)
     , m_dE2(0)
     , m_dX(0)
@@ -129,12 +133,12 @@ BOOL CDeltaBarrierDlg::OnInitDialog()
             tick_drawable::create(
                 barrier_plot.view,
                 const_n_tick_factory<axe::x>::create(
-                    make_simple_tick_formatter(1),
+                    make_simple_tick_formatter(2, 5),
                     0,
-                    10
+                    5
                 ),
                 const_n_tick_factory<axe::y>::create(
-                    make_simple_tick_formatter(3),
+                    make_simple_tick_formatter(2, 5),
                     0,
                     5
                 ),
@@ -298,5 +302,23 @@ void CDeltaBarrierDlg::OnBnClickedButton2()
 
 void CDeltaBarrierDlg::OnBnClickedButton3()
 {
+    UpdateData(TRUE);
 
+    barrier_plot.data->resize(n_points);
+
+    double a = (m_nN == 1) ? m_dL : (m_dL / (m_nN - 1));
+    double width = m_dL + ((m_nN == 1) ? 0 : a);
+    double s = m_dS0 * a;
+
+    continuous_t barrier = make_barrier_fn(m_nN, m_dV0, a, s);
+
+    for (size_t i = 0; i < n_points; ++i)
+    {
+        double x = - a / 2 + (double) i / n_points * width;
+        barrier_plot.data->at(i) = { x, barrier(x) };
+    }
+
+    barrier_plot.refresh();
+
+    m_cBarrier.RedrawWindow();
 }
