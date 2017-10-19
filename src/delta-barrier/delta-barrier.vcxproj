@@ -105,6 +105,7 @@
   <ItemGroup>
     <ClInclude Include="delta-barrier.h" />
     <ClInclude Include="delta-barrierDlg.h" />
+    <ClInclude Include="model.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
