@@ -289,6 +289,8 @@ void CDeltaBarrierDlg::OnBnClickedButton3()
 
     barrier_plot.data->resize(n_points);
     wavefunc_plot.data->resize(n_points);
+    wavefunc_re_plot.data->resize(n_points);
+    wavefunc_im_plot.data->resize(n_points);
 
     double a = (m_nN == 1) ? m_dL : (m_dL / (m_nN - 1));
     double width = m_dL + ((m_nN == 1) ? 0 : a);
@@ -341,7 +343,9 @@ void CDeltaBarrierDlg::OnBnClickedButton3()
     {
         double x = wavefunc.t;
         wavefunc = rk4_solve3s < cv3 > (wavefunc_dfunc, x, -step, wavefunc.x, wavefunc.dx);
-        wavefunc_plot.data->at(n_points / 2 - 1 - i) = { x, wavefunc.x.at<0>().re };
+        wavefunc_plot.data->at(n_points / 2 - 1 - i) = { x, norm(wavefunc.x.at<0>()) };
+        wavefunc_re_plot.data->at(n_points / 2 - 1 - i) = { x, wavefunc.x.at<0>().re };
+        wavefunc_im_plot.data->at(n_points / 2 - 1 - i) = { x, wavefunc.x.at<0>().im };
     }
 
     wavefunc = { right_x, u, du };
@@ -350,10 +354,18 @@ void CDeltaBarrierDlg::OnBnClickedButton3()
     {
         double x = wavefunc.t;
         wavefunc = rk4_solve3s < cv3 > (wavefunc_dfunc, x, step, wavefunc.x, wavefunc.dx);
-        wavefunc_plot.data->at(n_points / 2 - 1 + i) = { x, wavefunc.x.at<0>().re };
+        wavefunc_plot.data->at(n_points / 2 - 1 + i) = { x, norm(wavefunc.x.at<0>()) };
+        wavefunc_re_plot.data->at(n_points / 2 - 1 + i) = { x, wavefunc.x.at<0>().re };
+        wavefunc_im_plot.data->at(n_points / 2 - 1 + i) = { x, wavefunc.x.at<0>().im };
     }
 
-    wavefunc_plot.refresh();
+    wavefunc_plot.auto_world->clear();
+    wavefunc_plot.auto_world->adjust(*wavefunc_plot.data);
+    wavefunc_plot.auto_world->adjust(*wavefunc_re_plot.data);
+    wavefunc_plot.auto_world->adjust(*wavefunc_im_plot.data);
+    wavefunc_plot.auto_world->flush();
 
     m_cWaveFunc.RedrawWindow();
+    m_cWaveFuncRe.RedrawWindow();
+    m_cWaveFuncIm.RedrawWindow();
 }
