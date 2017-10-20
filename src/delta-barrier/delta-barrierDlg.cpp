@@ -305,6 +305,7 @@ void CDeltaBarrierDlg::OnBnClickedButton3()
     UpdateData(TRUE);
 
     barrier_plot.data->resize(n_points);
+    wavefunc_plot.data->resize(n_points);
 
     double a = (m_nN == 1) ? m_dL : (m_dL / (m_nN - 1));
     double width = m_dL + ((m_nN == 1) ? 0 : a);
@@ -321,4 +322,55 @@ void CDeltaBarrierDlg::OnBnClickedButton3()
     barrier_plot.refresh();
 
     m_cBarrier.RedrawWindow();
+
+    double k      = std::sqrt(m_dE);
+    double period = 2 * M_PI / k;
+
+    dfunc3_t < cv3 > alpha_beta = make_sweep_method_dfunc(barrier, m_dE);
+
+    /* use 3-sigma rule to maximally reduce the interval
+       is it applicable in our case? */
+    double left_x  = - 3 * s;
+    double right_x = (m_nN == 1) ? 3 * s : (m_dL + 3 * s);
+
+    /* barrier has a number of wide gaps
+       however we use constant step even if
+       it is not efficient just for simplicity */
+    dresult3 < cv3 > ab_ = rk4_solve3i < cv3 >
+    (
+        alpha_beta,
+        left_x,
+        right_x,
+        s / 100,
+        { _im(-k), _im(2 * k) }
+    );
+
+    cv3 u  = ab_.x.at<1>() / (_im(k) - ab_.x.at<0>());
+    cv3 du = _im(k) * ab_.x.at<1>() / (_im(k) - ab_.x.at<0>());
+
+    dfunc3s_t < cv3 > wavefunc_dfunc = make_schrodinger_dfunc(barrier, m_dE);
+
+    dresult3s < cv3 > wavefunc = { right_x, u, du };
+
+    double step = (double) 1. / (n_points / 2) * (period * 5);
+
+    for (size_t i = 0; i < n_points / 2; ++i)
+    {
+        double x = wavefunc.t;
+        wavefunc = rk4_solve3s < cv3 > (wavefunc_dfunc, x, -step, wavefunc.x, wavefunc.dx);
+        wavefunc_plot.data->at(n_points / 2 - 1 - i) = { x, wavefunc.x.at<0>().re };
+    }
+
+    wavefunc = { right_x, u, du };
+
+    for (size_t i = 0; i < n_points / 2 + 1; ++i)
+    {
+        double x = wavefunc.t;
+        wavefunc = rk4_solve3s < cv3 > (wavefunc_dfunc, x, step, wavefunc.x, wavefunc.dx);
+        wavefunc_plot.data->at(n_points / 2 - 1 + i) = { x, wavefunc.x.at<0>().re };
+    }
+
+    wavefunc_plot.refresh();
+
+    m_cWaveFunc.RedrawWindow();
 }
