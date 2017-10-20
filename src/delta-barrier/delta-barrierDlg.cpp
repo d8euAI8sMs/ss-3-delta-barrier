@@ -158,27 +158,27 @@ BOOL CDeltaBarrierDlg::OnInitDialog()
 
     barrier_plot
         .with_view()
-        .with_view_line_pen(plot::palette::pen(RGB(255, 255, 255), 1))
+        .with_view_line_pen(plot::palette::pen(RGB(255, 255, 255), 2))
         .with_data()
         .with_auto_viewport(barrier_avp);
     wavefunc_plot
         .with_view()
-        .with_view_line_pen(plot::palette::pen(RGB(255, 255, 255), 1))
+        .with_view_line_pen(plot::palette::pen(RGB(255, 255, 255), 2))
         .with_data()
         .with_auto_viewport(wavefunc_avp);
     wavefunc_re_plot
         .with_view()
-        .with_view_line_pen(plot::palette::pen(RGB(255, 255, 255), 1))
+        .with_view_line_pen(plot::palette::pen(RGB(255, 255, 255), 2))
         .with_data()
         .with_auto_viewport(wavefunc_avp);
     wavefunc_im_plot
         .with_view()
-        .with_view_line_pen(plot::palette::pen(RGB(255, 255, 255), 1))
+        .with_view_line_pen(plot::palette::pen(RGB(255, 255, 255), 2))
         .with_data()
         .with_auto_viewport(wavefunc_avp);
     transmission_plot
         .with_view()
-        .with_view_line_pen(plot::palette::pen(RGB(255, 255, 255), 1))
+        .with_view_line_pen(plot::palette::pen(RGB(255, 255, 255), 3))
         .with_data()
         .with_static_viewport({ 0, 0, 0, 1.2 });
 
