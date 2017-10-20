@@ -36,11 +36,61 @@ plot_t barrier_plot, wavefunc_plot, wavefunc_re_plot, wavefunc_im_plot, transmis
 UINT SimulationThreadProc(LPVOID pParam)
 {
     CDeltaBarrierDlg & dlg = * (CDeltaBarrierDlg *) pParam;
-    while (dlg.m_bWorking)
+
+    transmission_plot.data->clear();
+
+    transmission_plot.static_world->xmin = dlg.m_dE1;
+    transmission_plot.static_world->xmax = dlg.m_dE2;
+
+    double a = (dlg.m_nN == 1) ? dlg.m_dL : (dlg.m_dL / (dlg.m_nN - 1));
+    double width = dlg.m_dL + ((dlg.m_nN == 1) ? 0 : a);
+    double s = dlg.m_dS0 * a;
+
+    continuous_t barrier = make_barrier_fn(dlg.m_nN, dlg.m_dV0, a, s);
+
+    double de = (dlg.m_dE2 - dlg.m_dE1);
+
+    for (size_t i = 0; dlg.m_bWorking && (i < n_points); ++i)
     {
-        // todo
-        Sleep(16);
+        double e      = dlg.m_dE1 + i * de / n_points;
+        double k      = std::sqrt(e);
+        double period = 2 * M_PI / k;
+
+        dfunc3_t < cv3 > alpha_beta = make_sweep_method_dfunc(barrier, e);
+
+        /* use 3-sigma-like rule to maximally reduce the interval
+           is it applicable in our case? */
+        double left_x  = - 6 * s;
+        double right_x = (dlg.m_nN == 1) ? 6 * s : (dlg.m_dL + 6 * s);
+
+        /* barrier has a number of wide gaps
+           however we use constant step even if
+           it is not efficient just for simplicity */
+        dresult3 < cv3 > ab_ = rk4_solve3i < cv3 >
+        (
+            alpha_beta,
+            left_x,
+            right_x,
+            s / 100,
+            { _im(-k), _im(2 * k) }
+        );
+
+        cv3 u = ab_.x.at<1>() / (_im(k) - ab_.x.at<0>());
+
+        transmission_plot.data->emplace_back(e, norm(u));
+
+        if ((i % (n_points / 100)) == 0)
+        {
+            dlg.m_cTransmission.RedrawBuffer();
+            dlg.Invoke([&] () {
+                dlg.m_cTransmission.SwapBuffers();
+                dlg.m_cTransmission.RedrawWindow();
+            });
+        }
     }
+
+    dlg.m_bWorking = FALSE;
+
     return 0;
 }
 
