@@ -51,6 +51,8 @@ public:
     afx_msg void OnBnClickedButton2();
     PlotStatic m_cBarrier;
     PlotStatic m_cWaveFunc;
+    PlotStatic m_cWaveFuncRe;
+    PlotStatic m_cWaveFuncIm;
     PlotStatic m_cTransmission;
     double m_dL;
     double m_dV0;

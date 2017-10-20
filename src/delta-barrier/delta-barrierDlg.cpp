@@ -29,7 +29,7 @@ const size_t n_points = 1000;
 
 #define WM_INVOKE WM_USER + 1234
 
-plot_t barrier_plot, wavefunc_plot, transmission_plot;
+plot_t barrier_plot, wavefunc_plot, wavefunc_re_plot, wavefunc_im_plot, transmission_plot;
 
 // CDeltaBarrierDlg dialog
 
@@ -74,6 +74,8 @@ void CDeltaBarrierDlg::DoDataExchange(CDataExchange* pDX)
     DDX_Text(pDX, IDC_EDIT6, m_dE2);
     DDX_Text(pDX, IDC_EDIT7, m_dX);
     DDX_Text(pDX, IDC_EDIT8, m_dE);
+    DDX_Control(pDX, IDC_PLOT4, m_cWaveFuncRe);
+    DDX_Control(pDX, IDC_PLOT5, m_cWaveFuncIm);
 }
 
 BEGIN_MESSAGE_MAP(CDeltaBarrierDlg, CDialogEx)
@@ -116,6 +118,16 @@ BOOL CDeltaBarrierDlg::OnInitDialog()
         .with_view_line_pen(plot::palette::pen(RGB(255, 255, 255), 1))
         .with_data()
         .with_auto_viewport(wavefunc_avp);
+    wavefunc_re_plot
+        .with_view()
+        .with_view_line_pen(plot::palette::pen(RGB(255, 255, 255), 1))
+        .with_data()
+        .with_auto_viewport(wavefunc_avp);
+    wavefunc_im_plot
+        .with_view()
+        .with_view_line_pen(plot::palette::pen(RGB(255, 255, 255), 1))
+        .with_data()
+        .with_auto_viewport(wavefunc_avp);
     transmission_plot
         .with_view()
         .with_view_line_pen(plot::palette::pen(RGB(255, 255, 255), 1))
@@ -124,12 +136,16 @@ BOOL CDeltaBarrierDlg::OnInitDialog()
 
     m_cBarrier.background = palette::brush();
     m_cWaveFunc.background = palette::brush();
+    m_cWaveFuncRe.background = palette::brush();
+    m_cWaveFuncIm.background = palette::brush();
     m_cTransmission.background = palette::brush();
 
     m_cTransmission.triple_buffered = true;
 
     SetupPlot(m_cBarrier, barrier_plot);
     SetupPlot(m_cWaveFunc, wavefunc_plot);
+    SetupPlot(m_cWaveFuncRe, wavefunc_re_plot);
+    SetupPlot(m_cWaveFuncIm, wavefunc_im_plot);
     SetupPlot(m_cTransmission, transmission_plot);
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
