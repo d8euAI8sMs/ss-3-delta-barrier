@@ -58,7 +58,7 @@ public:
     double m_dV0;
     int m_nN;
     double m_dS0;
-    int m_dE1;
+    double m_dE1;
     double m_dE2;
     double m_dX;
     double m_dE;
