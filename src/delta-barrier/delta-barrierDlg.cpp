@@ -128,70 +128,37 @@ BOOL CDeltaBarrierDlg::OnInitDialog()
 
     m_cTransmission.triple_buffered = true;
 
-    m_cBarrier.plot_layer.with(
-        viewporter::create(
-            tick_drawable::create(
-                barrier_plot.view,
-                const_n_tick_factory<axe::x>::create(
-                    make_simple_tick_formatter(2, 5),
-                    0,
-                    5
-                ),
-                const_n_tick_factory<axe::y>::create(
-                    make_simple_tick_formatter(2, 5),
-                    0,
-                    5
-                ),
-                palette::pen(RGB(80, 80, 80)),
-                RGB(200, 200, 200)
-            ),
-            make_viewport_mapper(barrier_plot.viewport_mapper)
-        )
-    );
-
-    m_cWaveFunc.plot_layer.with(
-        viewporter::create(
-            tick_drawable::create(
-                wavefunc_plot.view,
-                const_n_tick_factory<axe::x>::create(
-                    make_simple_tick_formatter(1),
-                    0,
-                    10
-                ),
-                const_n_tick_factory<axe::y>::create(
-                    make_simple_tick_formatter(3),
-                    0,
-                    5
-                ),
-                palette::pen(RGB(80, 80, 80)),
-                RGB(200, 200, 200)
-            ),
-            make_viewport_mapper(wavefunc_plot.viewport_mapper)
-        )
-    );
-
-    m_cTransmission.plot_layer.with(
-        viewporter::create(
-            tick_drawable::create(
-                transmission_plot.view,
-                const_n_tick_factory<axe::x>::create(
-                    make_simple_tick_formatter(1),
-                    0,
-                    10
-                ),
-                const_n_tick_factory<axe::y>::create(
-                    make_simple_tick_formatter(3),
-                    0,
-                    5
-                ),
-                palette::pen(RGB(80, 80, 80)),
-                RGB(200, 200, 200)
-            ),
-            make_viewport_mapper(transmission_plot.viewport_mapper)
-        )
-    );
+    SetupPlot(m_cBarrier, barrier_plot);
+    SetupPlot(m_cWaveFunc, wavefunc_plot);
+    SetupPlot(m_cTransmission, transmission_plot);
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
+}
+
+template < typename _container_t >
+void CDeltaBarrierDlg::SetupPlot(PlotStatic & targetPlot,
+                                 plot::simple_list_plot < _container_t > & layer)
+{
+    targetPlot.plot_layer.with(
+        viewporter::create(
+            tick_drawable::create(
+                layer.view,
+                const_n_tick_factory<axe::x>::create(
+                    make_simple_tick_formatter(2, 5),
+                    0,
+                    5
+                ),
+                const_n_tick_factory<axe::y>::create(
+                    make_simple_tick_formatter(2, 5),
+                    0,
+                    5
+                ),
+                palette::pen(RGB(80, 80, 80)),
+                RGB(200, 200, 200)
+            ),
+            make_viewport_mapper(layer.viewport_mapper)
+        )
+    );
 }
 
 // If you add a minimize button to your dialog, you will need the code below

@@ -29,6 +29,8 @@ protected:
     void Invoke(const std::function < void () > & fn);
     void StartSimulationThread();
     void StopSimulationThread();
+    template < typename _container_t >
+    void SetupPlot(PlotStatic & targetPlot, plot::simple_list_plot < _container_t > & layer);
 
 public:
 
