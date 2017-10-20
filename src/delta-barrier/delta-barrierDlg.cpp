@@ -103,10 +103,8 @@ BOOL CDeltaBarrierDlg::OnInitDialog()
     params.factors = { 0, 0, 0.1, 0.1 };
     auto barrier_avp      = min_max_auto_viewport < points_t > ::create();
     auto wavefunc_avp     = min_max_auto_viewport < points_t > ::create();
-    auto transmission_avp = min_max_auto_viewport < points_t > ::create();
     barrier_avp->set_params(params);
     wavefunc_avp->set_params(params);
-    transmission_avp->set_params(params);
 
     barrier_plot
         .with_view()
@@ -132,7 +130,7 @@ BOOL CDeltaBarrierDlg::OnInitDialog()
         .with_view()
         .with_view_line_pen(plot::palette::pen(RGB(255, 255, 255), 1))
         .with_data()
-        .with_auto_viewport(transmission_avp);
+        .with_static_viewport({ 0, 0, 0, 1.2 });
 
     m_cBarrier.background = palette::brush();
     m_cWaveFunc.background = palette::brush();
