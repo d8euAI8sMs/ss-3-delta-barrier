@@ -313,10 +313,10 @@ void CDeltaBarrierDlg::OnBnClickedButton3()
 
     dfunc3_t < cv3 > alpha_beta = make_sweep_method_dfunc(barrier, m_dE);
 
-    /* use 3-sigma rule to maximally reduce the interval
+    /* use 3-sigma-like rule to maximally reduce the interval
        is it applicable in our case? */
-    double left_x  = - 3 * s;
-    double right_x = (m_nN == 1) ? 3 * s : (m_dL + 3 * s);
+    double left_x  = - 6 * s;
+    double right_x = (m_nN == 1) ? 6 * s : (m_dL + 6 * s);
 
     /* barrier has a number of wide gaps
        however we use constant step even if
