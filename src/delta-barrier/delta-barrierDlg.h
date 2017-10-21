@@ -31,6 +31,7 @@ protected:
     void StopSimulationThread();
     template < typename _container_t >
     void SetupPlot(PlotStatic & targetPlot, plot::simple_list_plot < _container_t > & layer);
+    void DrawBarrier();
 
 public:
 

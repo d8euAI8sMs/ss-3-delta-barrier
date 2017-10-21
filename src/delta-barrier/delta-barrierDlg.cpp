@@ -37,6 +37,10 @@ UINT SimulationThreadProc(LPVOID pParam)
 {
     CDeltaBarrierDlg & dlg = * (CDeltaBarrierDlg *) pParam;
 
+    dlg.Invoke([&] () {
+        dlg.DrawBarrier();
+    });
+
     transmission_plot.data->clear();
 
     transmission_plot.static_world->xmin = dlg.m_dE1;
@@ -331,14 +335,9 @@ void CDeltaBarrierDlg::OnBnClickedButton2()
 }
 
 
-void CDeltaBarrierDlg::OnBnClickedButton3()
+void CDeltaBarrierDlg::DrawBarrier()
 {
-    UpdateData(TRUE);
-
     barrier_plot.data->resize(n_points);
-    wavefunc_plot.data->resize(n_points);
-    wavefunc_re_plot.data->resize(n_points);
-    wavefunc_im_plot.data->resize(n_points);
 
     double a = (m_nN == 1) ? 1 : (1. / (m_nN - 1));
     double width = 1. + ((m_nN == 1) ? 0 : a);
@@ -355,6 +354,24 @@ void CDeltaBarrierDlg::OnBnClickedButton3()
     barrier_plot.refresh();
 
     m_cBarrier.RedrawWindow();
+}
+
+
+void CDeltaBarrierDlg::OnBnClickedButton3()
+{
+    UpdateData(TRUE);
+
+    DrawBarrier();
+
+    wavefunc_plot.data->resize(n_points);
+    wavefunc_re_plot.data->resize(n_points);
+    wavefunc_im_plot.data->resize(n_points);
+
+    double a = (m_nN == 1) ? 1 : (1. / (m_nN - 1));
+    double width = 1. + ((m_nN == 1) ? 0 : a);
+    double s = m_dS0 * 1.;
+
+    continuous_t barrier = make_barrier_fn(m_nN, m_dV0, a, s);
 
     double k      = m_dL * std::sqrt(m_dE);
     double period = 2 * M_PI / k;
