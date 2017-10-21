@@ -90,15 +90,16 @@ namespace model
     math::dfunc3_t < cv3 > make_sweep_method_dfunc
     (
         const math::continuous_t & barrier_fn,
-        double E
+        double E,
+        double L
     )
     {
         return [=] (double x, const cv3 & ab_)
         {
             return cv3
             {
-                - (E - barrier_fn(x)) - ab_.at<0>() * ab_.at<0>(),
-                - ab_.at<0>() * ab_.at<1>()
+                - L * (E * L * L - L * barrier_fn(x)) - L * ab_.at<0>() * ab_.at<0>(),
+                - L * ab_.at<0>() * ab_.at<1>()
             };
         };
     }
@@ -106,14 +107,15 @@ namespace model
     math::dfunc3s_t < cv3 > make_schrodinger_dfunc
     (
         const math::continuous_t & barrier_fn,
-        double E
+        double E,
+        double L
     )
     {
         return [=] (double x, const cv3 & u__, const cv3 &)
         {
             return cv3
             {
-                - (E - barrier_fn(x)) * u__.at<0>()
+                - (E * L * L - L * barrier_fn(x)) * u__.at<0>()
             };
         };
     }

@@ -42,8 +42,8 @@ UINT SimulationThreadProc(LPVOID pParam)
     transmission_plot.static_world->xmin = dlg.m_dE1;
     transmission_plot.static_world->xmax = dlg.m_dE2;
 
-    double a = (dlg.m_nN == 1) ? dlg.m_dL : (dlg.m_dL / (dlg.m_nN - 1));
-    double width = dlg.m_dL + ((dlg.m_nN == 1) ? 0 : a);
+    double a = (dlg.m_nN == 1) ? 1 : (1. / (dlg.m_nN - 1));
+    double width = 1. + ((dlg.m_nN == 1) ? 0 : a);
     double s = dlg.m_dS0 * a;
 
     continuous_t barrier = make_barrier_fn(dlg.m_nN, dlg.m_dV0, a, s);
@@ -53,15 +53,15 @@ UINT SimulationThreadProc(LPVOID pParam)
     for (size_t i = 0; dlg.m_bWorking && (i < n_points); ++i)
     {
         double e      = dlg.m_dE1 + i * de / n_points;
-        double k      = std::sqrt(e);
+        double k      = dlg.m_dL * std::sqrt(e);
         double period = 2 * M_PI / k;
 
-        dfunc3_t < cv3 > alpha_beta = make_sweep_method_dfunc(barrier, e);
+        dfunc3_t < cv3 > alpha_beta = make_sweep_method_dfunc(barrier, e, dlg.m_dL);
 
         /* use 3-sigma-like rule to maximally reduce the interval
            is it applicable in our case? */
         double left_x  = - 6 * s;
-        double right_x = (dlg.m_nN == 1) ? 6 * s : (dlg.m_dL + 6 * s);
+        double right_x = (dlg.m_nN == 1) ? 6 * s : (1. + 6 * s);
 
         /* barrier has a number of wide gaps
            however we use constant step even if
@@ -340,9 +340,9 @@ void CDeltaBarrierDlg::OnBnClickedButton3()
     wavefunc_re_plot.data->resize(n_points);
     wavefunc_im_plot.data->resize(n_points);
 
-    double a = (m_nN == 1) ? m_dL : (m_dL / (m_nN - 1));
-    double width = m_dL + ((m_nN == 1) ? 0 : a);
-    double s = m_dS0 * a;
+    double a = (m_nN == 1) ? 1 : (1. / (m_nN - 1));
+    double width = 1. + ((m_nN == 1) ? 0 : a);
+    double s = m_dS0 * 1.;
 
     continuous_t barrier = make_barrier_fn(m_nN, m_dV0, a, s);
 
@@ -356,15 +356,15 @@ void CDeltaBarrierDlg::OnBnClickedButton3()
 
     m_cBarrier.RedrawWindow();
 
-    double k      = std::sqrt(m_dE);
+    double k      = m_dL * std::sqrt(m_dE);
     double period = 2 * M_PI / k;
 
-    dfunc3_t < cv3 > alpha_beta = make_sweep_method_dfunc(barrier, m_dE);
+    dfunc3_t < cv3 > alpha_beta = make_sweep_method_dfunc(barrier, m_dE, m_dL);
 
     /* use 3-sigma-like rule to maximally reduce the interval
        is it applicable in our case? */
     double left_x  = - 6 * s;
-    double right_x = (m_nN == 1) ? 6 * s : (m_dL + 6 * s);
+    double right_x = (m_nN == 1) ? 6 * s : (1. + 6 * s);
 
     /* barrier has a number of wide gaps
        however we use constant step even if
@@ -381,7 +381,7 @@ void CDeltaBarrierDlg::OnBnClickedButton3()
     cv3 u  = ab_.x.at<1>() / (_im(k) - ab_.x.at<0>());
     cv3 du = _im(k) * ab_.x.at<1>() / (_im(k) - ab_.x.at<0>());
 
-    dfunc3s_t < cv3 > wavefunc_dfunc = make_schrodinger_dfunc(barrier, m_dE);
+    dfunc3s_t < cv3 > wavefunc_dfunc = make_schrodinger_dfunc(barrier, m_dE, m_dL);
 
     dresult3s < cv3 > wavefunc = { right_x, u, du };
 
