@@ -71,7 +71,7 @@ UINT SimulationThreadProc(LPVOID pParam)
             alpha_beta,
             left_x,
             right_x,
-            s / 100,
+            s / 10,
             { _im(-k), _im(2 * k) * _re_im(cos(k * left_x * dlg.m_dL), sin(k * left_x * dlg.m_dL)) }
         );
 
@@ -374,7 +374,7 @@ void CDeltaBarrierDlg::OnBnClickedButton3()
         alpha_beta,
         left_x,
         right_x,
-        s / 100,
+        s / 10,
         { _im(-k), _im(2 * k) * _re_im(cos(k * left_x * m_dL), sin(k * left_x * m_dL)) }
     );
 
