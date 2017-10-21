@@ -108,7 +108,6 @@ CDeltaBarrierDlg::CDeltaBarrierDlg(CWnd* pParent /*=NULL*/)
     , m_dS0(0.01)
     , m_dE1(0)
     , m_dE2(0)
-    , m_dX(0)
     , m_dE(0)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
@@ -126,7 +125,6 @@ void CDeltaBarrierDlg::DoDataExchange(CDataExchange* pDX)
     DDX_Text(pDX, IDC_EDIT4, m_dS0);
     DDX_Text(pDX, IDC_EDIT5, m_dE1);
     DDX_Text(pDX, IDC_EDIT6, m_dE2);
-    DDX_Text(pDX, IDC_EDIT7, m_dX);
     DDX_Text(pDX, IDC_EDIT8, m_dE);
     DDX_Control(pDX, IDC_PLOT4, m_cWaveFuncRe);
     DDX_Control(pDX, IDC_PLOT5, m_cWaveFuncIm);

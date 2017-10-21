@@ -61,7 +61,6 @@ public:
     double m_dS0;
     double m_dE1;
     double m_dE2;
-    double m_dX;
     double m_dE;
     afx_msg void OnBnClickedButton3();
 };
