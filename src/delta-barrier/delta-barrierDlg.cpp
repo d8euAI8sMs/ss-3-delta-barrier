@@ -198,6 +198,9 @@ BOOL CDeltaBarrierDlg::OnInitDialog()
     SetupPlot(m_cWaveFuncIm, wavefunc_im_plot);
     SetupPlot(m_cTransmission, transmission_plot);
 
+    OnBnClickedButton3();
+    OnBnClickedButton1();
+
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
