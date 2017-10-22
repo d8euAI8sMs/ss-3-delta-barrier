@@ -370,7 +370,7 @@ void CDeltaBarrierDlg::OnBnClickedButton3()
 
     double a = (m_nN == 1) ? 1 : (1. / (m_nN - 1));
     double width = 1. + ((m_nN == 1) ? 0 : a);
-    double s = m_dS0 * 1.;
+    double s = m_dS0 * a;
 
     continuous_t barrier = make_barrier_fn(m_nN, m_dV0, a, s);
 
