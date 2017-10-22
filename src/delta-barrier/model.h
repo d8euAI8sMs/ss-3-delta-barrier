@@ -81,9 +81,9 @@ namespace model
             double y = 0;
             for (size_t j = 0; j < n; ++j)
             {
-                y += std::exp (- (x - j * a) * (x - j * a) / sigma / sigma) / sq2pi / sigma;
+                y += std::exp (- (x - j * a) / sigma * (x - j * a) / sigma);
             }
-            return y * v0;
+            return y * v0 / sq2pi / sigma;
         };
     }
 
