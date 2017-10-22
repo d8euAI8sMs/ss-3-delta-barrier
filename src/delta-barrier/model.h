@@ -98,8 +98,8 @@ namespace model
         {
             return cv3
             {
-                - L * (E * L * L - L * barrier_fn(x)) - L * ab_.at<0>() * ab_.at<0>(),
-                - L * ab_.at<0>() * ab_.at<1>()
+                - (E * L * L - L * barrier_fn(x)) - ab_.at<0>() * ab_.at<0>(),
+                - ab_.at<0>() * ab_.at<1>()
             };
         };
     }
