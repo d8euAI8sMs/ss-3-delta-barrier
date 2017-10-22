@@ -76,10 +76,10 @@ UINT SimulationThreadProc(LPVOID pParam)
             left_x,
             right_x,
             s / 10,
-            { _im(-k), _im(2 * k) * _re_im(cos(k * left_x), sin(k * left_x)) }
+            { - _i * k, 2 * _i * k * exp(_i * k * left_x) }
         );
 
-        cv3 u = ab_.x.at<1>() / (_im(k) - ab_.x.at<0>());
+        cv3 u = ab_.x.at<1>() / (_i * k - ab_.x.at<0>());
 
         transmission_plot.data->emplace_back(e, norm(u));
 
@@ -393,11 +393,11 @@ void CDeltaBarrierDlg::OnBnClickedButton3()
         left_x,
         right_x,
         s / 10,
-        { _im(-k), _im(2 * k) * _re_im(cos(k * left_x), sin(k * left_x)) }
+        { - _i * k, 2 * _i * k * exp(_i * k * left_x) }
     );
 
-    cv3 u  = ab_.x.at<1>() / (_im(k) - ab_.x.at<0>());
-    cv3 du = _im(k) * ab_.x.at<1>() / (_im(k) - ab_.x.at<0>());
+    cv3 u  = ab_.x.at<1>() / (_i * k - ab_.x.at<0>());
+    cv3 du = _i * k * ab_.x.at<1>() / (_i * k - ab_.x.at<0>());
 
     dfunc3s_t < cv3 > wavefunc_dfunc = make_schrodinger_dfunc(barrier, m_dE, m_dL);
 
