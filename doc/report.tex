@@ -154,6 +154,156 @@ b(\xi) = \frac{2m}{\hbar^2} U(x = \xi\xi_0) = v \sum\limits_{i=0}^{N-1} {\delta\
 
 \section{Результаты и их обсуждение}
 
+В результате работы была написана демонстрационная программа на языке $c++$. Программа позволяет исследовать зависимость коэффициента прохождения от начальной энергии частицы.
+
+Внешний вид программы приведен на \autoref{fig:mainwindow}.
+
+\begin{figure}[h]%
+\centering
+\includegraphics[width=1\textwidth]{mainwindow}%
+\caption[Главное окно программы.]{Главное окно программы}%
+\label{fig:mainwindow}%
+\end{figure}
+
+Программа позволяет задавать ширину и высоту барьера, остроту пиков барьера, количество дельта-функций в барьере, энергию (диапазон энергий) налетающей частицы. На трех графиках отображаются: внешний вид самого барьера, модуль, реальная и мнимая часть волновой функции (при заданной энергии; несколько периодов), а также зависимость коэффициента прохождения от энергии частицы.
+
+Рассмотрим некоторые результаты моделирования.
+
+\subsection{Дельта-барьер}
+
+В случае дельта-барьера (одна дельта-функция в гребенке) несложными выкладками можно придти к следующему выражению для коэффициента прохождения:
+%%
+\begin{equation}\label{eq:transmission_for_delta_barrier}
+T(k) \equiv T(E) = \frac{2 i k}{2 i k - V_0}
+\end{equation}
+%%
+При этом волновая функция испытывает скачек производной, пропорциональный высоте барьера (\autoref{fig:delta_barrier_wavefunc_derivative_break}). Качественно график зависимости $\left|T(E)\right|$ совпадает с результатом моделирования (\autoref{fig:delta_barrier_transmission}). Следует также ожидать (подтверждается моделированием, здесь не приводится), что при условии достаточной узости барьера произвольной формы (период волновой функции много больше ширины барьера: $k \gg L$) результат будет близок к \autoref{eq:transmission_for_delta_barrier} и по виду будет мало отличаться от \autoref{fig:delta_barrier_transmission}.
+
+При уменьшении ширины барьера также ожидаемо увеличивается крутизна зависимости $\left|T(E)\right|$ (\autoref{fig:delta_barrier_transmission} \subref{fig:delta_barrier_transmission_narrow}).
+
+\begin{figure}[!htb]%
+\centering
+\includegraphics[width=0.8\textwidth]{delta_barrier_wavefunc_derivative_break}%
+\caption{Волновая функция. Дельта-барьер. Сверху вниз: модуль, реальная часть, мнимая часть волновой функции. Виден разрыв производной в точке стояния барьера ($x = 0$). Слева от барьера заметно сильное отражение (см. график модуля волновой функции)}%
+\label{fig:delta_barrier_wavefunc_derivative_break}%
+\end{figure}
+
+\begin{figure}[!htb]%
+\centering
+%
+\subfloat[][]{%
+\label{fig:delta_barrier_transmission_nominal}%
+\includegraphics[width=0.45\textwidth]{delta_barrier_transmission}}%
+\hspace{8pt}%
+%
+\subfloat[][]{%
+\label{fig:delta_barrier_transmission_narrow}%
+\includegraphics[width=0.45\textwidth]{delta_barrier_transmission_narrow}}%
+\hspace{8pt}%
+%
+\caption[Коэффициент прохождения.]{Коэффициент прохождения. Дельта-барьер.
+\subref{fig:delta_barrier_transmission_nominal} Барьер номинальной ширины %
+\subref{fig:delta_barrier_transmission_narrow} Барьер, \'{у}же номинальной ширины в 10 раз} %
+\label{fig:delta_barrier_transmission}%
+\end{figure}
+
+\subsection{Гребенка дельта-барьеров}
+
+При условии $k \sim L$ (период волновой функции сравним с шириной барьера) на коэффициент прохождения начинает влиять форма барьера. Зависимость $\left|T(E)\right|$ перестает быть монотонной, в ней появляются области, в которых коэффициент пропускания резко стремится к единице (области прозрачности) или резко спадает (области задержания). Вид зависимости $\left|T(E)\right|$, количество и степень выраженности этих областей зависят от количества дельта-функций в барьере, высоты барьера, соотношения $k$ и $L$.
+
+Результаты моделирования представлены на (\autoref{fig:delta_barrier_n_transmission}).
+
+\begin{figure}[!htb]%
+\centering
+%
+\subfloat[][]{%
+\label{fig:delta_barrier_2_transmission}%
+\includegraphics[width=1\textwidth]{delta_barrier_2_transmission}}%
+\hspace{8pt}%
+%
+\subfloat[][]{%
+\label{fig:delta_barrier_3_transmission}%
+\includegraphics[width=1\textwidth]{delta_barrier_3_transmission}}%
+\hspace{8pt}%
+%
+\caption[Коэффициент прохождения.]{Коэффициент прохождения. Дельта-барьер.
+\subref{fig:delta_barrier_2_transmission} две дельта-функции %
+\subref{fig:delta_barrier_3_transmission} три дельта-функции} %
+\label{fig:delta_barrier_n_transmission}%
+\end{figure}
+
+\subsection{Прямоугольный барьер}
+
+Для прямоугольного барьера зависимость коэффициента прохождения и вид волновых функций также можно получить аналитически. Вывод и результаты аналитического расчета известны и здесь не приводятся. Они совпадают с результатами моделирования.
+
+Прямоугольный барьер можно промоделировать, взяв большое количество достаточно широких дельта-барьеров (\autoref{fig:rect_and_delta_10_barrier} \subref{fig:rect_barrier}; в приближении гауссовых куполов; $\sim 10-20$). При выполнении соотношения $k \sim L$ и достаточной крутизне стенок барьера получается известный и понятный результат. Частица с энергией, много меньшей высоты барьера, не может проникнуть за барьер. При энергиях частицы, сравнимых с высотой барьера наблюдается т.н. просачивание частицы через барьер, что невозможно в классическом случае. Степень просачивания зависит от энергии частицы нелинейно, также имеются области большей и меньшей прозрачности барьера.
+
+Результаты моделирования представлены на (\autoref{fig:rect_and_delta_10_barrier_transmission} \subref{fig:rect_barrier_transmission}).
+
+Весьма близкие результаты получаются и при длинной гребенке узких дельта-функций (\autoref{fig:rect_and_delta_10_barrier} \subref{fig:delta_barrier_10}) при том же соотношении $k$ и $L$. Различия наблюдаются в большей степени при $k \gg L$. В случае прямоугольного барьера области прозрачности расположены на меньших значениях энергии, чем в случае гребенки узких дельта-функций (\autoref{fig:rect_and_delta_10_barrier_transmission} \subref{fig:rect_barrier_transmission_wide}-\subref{fig:delta_barrier_10_transmission_wide}).
+
+Высота барьера в основном влияет лишь на глубину областей прозрачности (\autoref{fig:rect_and_delta_10_barrier_transmission} \subref{fig:delta_barrier_10_transmission_wide}-\subref{fig:delta_barrier_10x2_transmission_wide}).
+
+\begin{figure}[!htb]%
+\centering
+%
+\subfloat[][]{%
+\label{fig:rect_barrier}%
+\includegraphics[width=0.45\textwidth]{rect_barrier}}%
+\hspace{8pt}%
+%
+\subfloat[][]{%
+\label{fig:delta_barrier_10}%
+\includegraphics[width=0.45\textwidth]{delta_barrier_10}}%
+\hspace{8pt}%
+%
+\caption[Коэффициент прохождения.]{
+\subref{fig:rect_barrier} Прямоугольный барьер %
+\subref{fig:delta_barrier_10} Гребенка дельта-барьеров %
+} %
+\label{fig:rect_and_delta_10_barrier}%
+\end{figure}
+
+\begin{figure}[!htb]%
+\centering
+%
+\subfloat[][]{%
+\label{fig:rect_barrier_transmission}%
+\includegraphics[width=0.45\textwidth]{rect_barrier_transmission}}%
+\hspace{8pt}%
+%
+\subfloat[][]{%
+\label{fig:rect_barrier_transmission_wide}%
+\includegraphics[width=0.45\textwidth]{rect_barrier_transmission_wide}}%
+\hspace{8pt}%
+%
+\subfloat[][]{%
+\label{fig:delta_barrier_10_transmission_wide}%
+\includegraphics[width=0.45\textwidth]{delta_barrier_10_transmission_wide}}%
+\hspace{8pt}%
+%
+\subfloat[][]{%
+\label{fig:delta_barrier_10x2_transmission_wide}%
+\includegraphics[width=0.45\textwidth]{delta_barrier_10x2_transmission_wide}}%
+\hspace{8pt}%
+%
+\caption[Коэффициент прохождения.]{
+\subref{fig:rect_barrier_transmission} Коэффициент прохождения через прямоугольный барьер %
+\subref{fig:rect_barrier_transmission_wide} Коэффициент прохождения через прямоугольный барьер при б\'{о}льших значениях энергии %
+\subref{fig:delta_barrier_10_transmission_wide} Коэффициент прохождения через гребенку дельта-барьеров %
+\subref{fig:delta_barrier_10x2_transmission_wide} Коэффициент прохождения через гребенку дельта-барьеров удвоенной высоты %
+} %
+\label{fig:rect_and_delta_10_barrier_transmission}%
+\end{figure}
+
 \section{Выводы}
+
+В ходе работы была разработана демонстрационная программа для исследования зависимости коэффициента прохождения от энергии частицы. Программа также позволяет исследовать влияние параметров барьера (высота, ширина, форма) в ручном режиме.
+
+При помощи программы были смоделированы классические барьеры -- дельта-барьер и прямоугольный барьер. Результаты моделирования совпадают с теоретическими. Видно, что квантовая частица способна проникать через барьер даже в случае, когда ее энергия меньше высоты барьера, что невозможно в классическом случае.
+
+Были исследованы результаты, полученные при моделировании прохождения частицы через гребенку дельта-барьеров. Результатом стала сильно нелинейная зависимость коэффициента прохождения от энергии налетающей частицы. При не слишком больших энергиях налетающей частицы длинная гребенка дельта-барьеров ведет себя приблизительно также, как и прямоугольный барьер той же ширины. Однако области прозрачности дельта-барьера сдвинуты относительно областей прозрачности прямоугольного барьера в сторону меньших энергий. Высота барьера влияет в основном только на глубину областей прозрачности.
+
+При моделировании была отмечена неустойчивость выбранных численных методов в случае достаточно высоких или достаточно широких барьеров, из чего можно сделать вывод об ограниченной применимости по крайней мере явного метода Рунге-Кутты с постоянным шагом.
 
 \end{document}
