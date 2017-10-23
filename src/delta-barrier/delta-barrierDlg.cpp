@@ -403,7 +403,7 @@ void CDeltaBarrierDlg::OnBnClickedButton3()
 
     dresult3s < cv3 > wavefunc = { right_x, u, du };
 
-    double step = (double) 1. / (n_points / 2) * (period * 5);
+    double step = (double) 1. / (n_points / 2) * (period * 5 + 1.0);
 
     for (size_t i = 0; i < n_points / 2; ++i)
     {
@@ -415,6 +415,8 @@ void CDeltaBarrierDlg::OnBnClickedButton3()
     }
 
     wavefunc = { right_x, u, du };
+
+    step = (double) 1. / (n_points / 2) * (period * 5);
 
     for (size_t i = 0; i < n_points / 2 + 1; ++i)
     {
